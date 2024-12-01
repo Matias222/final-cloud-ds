@@ -44,10 +44,10 @@ CREATE TABLE Vuelos (
 CREATE TABLE Compras (
     user_id VARCHAR(255),
     id_vuelo VARCHAR(255),
+    id_compra VARCHAR(255),
     fecha_compra DATETIME NOT NULL,
     cantidad_boletos INT NOT NULL,
     precio_total INT NOT NULL,
-    PRIMARY KEY (user_id, id_vuelo),
     FOREIGN KEY (user_id) REFERENCES Usuarios(user_id) ON DELETE CASCADE,
     FOREIGN KEY (id_vuelo) REFERENCES Vuelos(id_vuelo) ON DELETE CASCADE
 );
