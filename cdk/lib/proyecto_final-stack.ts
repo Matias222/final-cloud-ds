@@ -27,7 +27,9 @@ export class ProyectoFinalStack extends cdk.Stack {
 
     securityGroup.addIngressRule(ec2.Peer.anyIpv4(), ec2.Port.allTraffic(), 'Allow all inbound traffic');
 
-    const amazonLinuxAmi = ec2.MachineImage.latestAmazonLinux();
+    const ubuntuAmi = ec2.MachineImage.genericLinux({
+      'us-east-2': 'ami-048f97d041d14fd4e',
+    });
 
     const environments = ['dev', 'test', 'prod'];
 
@@ -35,17 +37,19 @@ export class ProyectoFinalStack extends cdk.Stack {
 
       const userData = ec2.UserData.forLinux();
       userData.addCommands(
-        'sudo yum update -y',
-        'sudo yum install -y docker',
-        'sudo yum install -y git', 
-        'sudo service docker start',
+        'sudo apt update -y',
+        'sudo apt install -y docker.io',
+        'sudo apt install -y git',
+        'sudo apt install docker-compose',
+        'sudo systemctl enable docker',
+        'sudo systemctl start docker',
         'sudo git clone https://github.com/Matias222/final-cloud-ds.git'
       );
 
       new ec2.Instance(this, `${env}-Instance`, {
         vpc,
-        instanceType: ec2.InstanceType.of(ec2.InstanceClass.T2, ec2.InstanceSize.NANO), 
-        machineImage: amazonLinuxAmi,
+        instanceType: ec2.InstanceType.of(ec2.InstanceClass.T2, ec2.InstanceSize.MICRO), 
+        machineImage: ubuntuAmi,
         securityGroup,
         keyName: 'utec_proyecto',
         userData,
