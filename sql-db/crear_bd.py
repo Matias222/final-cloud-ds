@@ -11,6 +11,8 @@ DATABASE = os.getenv('MYSQL_DATABASE')
 USER = os.getenv('MYSQL_USER')
 PASSWORD = os.getenv('MYSQL_PASSWORD')
 
+print(HOST)
+
 def run_sql_script(sql_file="./init.sql"):
     try:
         connection = mysql.connector.connect(

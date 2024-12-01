@@ -7,6 +7,12 @@ CREATE DATABASE gestion_vuelos;
 -- Use the created database
 USE gestion_vuelos;
 
+-- Set the global timezone to Peru time (UTC-5)
+SET GLOBAL time_zone = '-05:00';
+
+-- Ensure the session timezone is also set to Peru time (UTC-5)
+SET time_zone = '-05:00';
+
 -- Create the Usuarios table
 CREATE TABLE Usuarios (
     user_id VARCHAR(255) PRIMARY KEY,
