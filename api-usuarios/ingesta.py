@@ -49,6 +49,8 @@ def infer_column_types(file_path):
                     return 'date'
                 if re.match(r'^\d{1,2}/\d{1,2}/\d{4} \d{1,2}:\d{1,2}(:\d{1,2})?$', value):
                     return 'timestamp'
+                if re.match(r'^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$', value):
+                    return 'timestamp'
         return None
 
     columns = []
@@ -87,12 +89,12 @@ def save_to_file(data, filename):
 
 def upload_to_s3(filename, bucket_name):
     logger.info("Uploading file to S3: %s/%s", bucket_name, filename)
-    s3.upload_file(filename, bucket_name, "aerolineas/" + filename)
+    s3.upload_file(filename, bucket_name, "usuarios/" + filename)
     logger.info("Uploaded %s to S3 bucket %s", filename, bucket_name)
 
 def create_glue_catalog():
     logger.info("Creating Glue catalog")
-    s3_path = f"s3://{S3_BUCKET_NAME}/aerolineas"
+    s3_path = f"s3://{S3_BUCKET_NAME}/usuarios"
 
     columns = infer_column_types(NOMBRE_TABLA + ".csv")
 
@@ -107,7 +109,7 @@ def create_glue_catalog():
                 "OutputFormat": "org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat",
                 "SerdeInfo": {
                     "SerializationLibrary": "org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe",
-                    "Parameters": {"field.delim": ","},
+                    "Parameters": {"field.delim": ",","skip.header.line.count": "1"},
                 },
             },
             "TableType": "EXTERNAL_TABLE",

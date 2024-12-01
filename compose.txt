@@ -1,0 +1,76 @@
+version: '3.9'
+
+services:
+
+  api-aerolineas:
+    build:
+      context: ./api-aerolineas
+    container_name: api-aerolineas-container
+    env_file:
+      - .env
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"  
+
+  api-compras:
+    build:
+      context: ./api-compras
+    container_name: api-compras-container
+    env_file:
+      - .env
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"  
+
+  api-destinos:
+    build:
+      context: ./api-destinos
+    container_name: api-destinos-container
+    env_file:
+      - .env
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"  
+
+  api-resenas:
+    build:
+      context: ./api-resenas
+    container_name: api-resenas-container
+    env_file:
+      - .env
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"  
+
+
+  api-usuarios:
+    build:
+      context: ./api-usuarios
+    container_name: api-usuarios-container
+    env_file:
+      - .env
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"  
+
+  api-vuelos:
+    build:
+      context: ./api-vuelos
+    container_name: api-vuelos-container
+    env_file:
+      - .env
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"  

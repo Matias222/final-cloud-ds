@@ -49,6 +49,8 @@ def infer_column_types(file_path):
                     return 'date'
                 if re.match(r'^\d{1,2}/\d{1,2}/\d{4} \d{1,2}:\d{1,2}(:\d{1,2})?$', value):
                     return 'timestamp'
+                if re.match(r'^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$', value):
+                    return 'timestamp'
         return None
 
     columns = []
@@ -107,7 +109,7 @@ def create_glue_catalog():
                 "OutputFormat": "org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat",
                 "SerdeInfo": {
                     "SerializationLibrary": "org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe",
-                    "Parameters": {"field.delim": ","},
+                    "Parameters": {"field.delim": ",","skip.header.line.count": "1"},
                 },
             },
             "TableType": "EXTERNAL_TABLE",

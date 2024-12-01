@@ -40,7 +40,7 @@ export class ProyectoFinalStack extends cdk.Stack {
         'sudo apt update -y',
         'sudo apt install -y docker.io',
         'sudo apt install -y git',
-        'sudo apt install docker-compose',
+        'sudo apt install -y docker-compose',
         'sudo systemctl enable docker',
         'sudo systemctl start docker',
         'sudo git clone https://github.com/Matias222/final-cloud-ds.git'
