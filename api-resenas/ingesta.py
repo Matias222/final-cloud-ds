@@ -34,7 +34,7 @@ logger = logging.getLogger(__name__)
 def infer_column_types(file_path):
     """Infers column types from a CSV file and returns a schema for Glue."""
     logger.info("Inferring column types from file: %s", file_path)
-    df = pd.read_csv(file_path)
+    df = pd.read_csv(file_path,delimiter=";")
 
     type_mapping = {
         'int64': 'int',
@@ -84,7 +84,7 @@ def scan_dynamodb_table():
 def save_to_file(data, filename):
     logger.info("Saving data to file: %s", filename)
     df = pd.DataFrame([{k: list(v.values())[0] for k, v in item.items()} for item in data])
-    df.to_csv(filename, index=False)
+    df.to_csv(filename, index=False,sep=";")
     logger.info("Data saved to file successfully with %d records", len(df))
 
 def upload_to_s3(filename, bucket_name):
@@ -109,7 +109,7 @@ def create_glue_catalog():
                 "OutputFormat": "org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat",
                 "SerdeInfo": {
                     "SerializationLibrary": "org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe",
-                    "Parameters": {"field.delim": ",","skip.header.line.count": "1"},
+                    "Parameters": {"field.delim": ";","skip.header.line.count": "1"},
                 },
             },
             "TableType": "EXTERNAL_TABLE",
