@@ -3,9 +3,9 @@ import pandas as pd
 import os
 import re
 import logging
+from datetime import datetime
 from dotenv import load_dotenv
 
-# Load environment variables
 load_dotenv()
 
 AMAZON_ACCESS_KEY_ID = os.getenv('aws_access_key_id')
@@ -23,7 +23,12 @@ s3 = boto3.client("s3", aws_access_key_id=AMAZON_ACCESS_KEY_ID, aws_secret_acces
 glue = boto3.client("glue", aws_access_key_id=AMAZON_ACCESS_KEY_ID, aws_secret_access_key=AMAZON_SECRET_ACCESS_KEY, region_name=AWS_REGION)
 
 # Configure logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s.%(msecs)03d | %(levelname)s | ' + NOMBRE_TABLA + ' | %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S',
+)
+
 logger = logging.getLogger(__name__)
 
 def infer_column_types(file_path):
@@ -78,7 +83,7 @@ def save_to_file(data, filename):
     logger.info("Saving data to file: %s", filename)
     df = pd.DataFrame([{k: list(v.values())[0] for k, v in item.items()} for item in data])
     df.to_csv(filename, index=False)
-    logger.info("Data saved to file successfully")
+    logger.info("Data saved to file successfully with %d records", len(df))
 
 def upload_to_s3(filename, bucket_name):
     logger.info("Uploading file to S3: %s/%s", bucket_name, filename)
@@ -111,10 +116,10 @@ def create_glue_catalog():
     logger.info("Glue table '%s' created for data at %s", NOMBRE_TABLA, s3_path)
 
 def main():
+    start_time = datetime.now()
     logger.info("Starting main workflow")
     
     try:
-    
         data = scan_dynamodb_table()
 
         filename = f"{NOMBRE_TABLA}.csv"
@@ -126,9 +131,12 @@ def main():
 
         os.remove(filename)
         logger.info("Temporary file '%s' removed", filename)
-    
     except Exception as e:
         logger.error("An error occurred: %s", e, exc_info=True)
+    finally:
+        end_time = datetime.now()
+        duration = (end_time - start_time).total_seconds()
+        logger.info("Workflow completed in %.3f seconds", duration)
 
 if __name__ == "__main__":
     main()
