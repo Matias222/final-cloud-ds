@@ -89,12 +89,12 @@ def save_to_file(data, filename):
 
 def upload_to_s3(filename, bucket_name):
     logger.info("Uploading file to S3: %s/%s", bucket_name, filename)
-    s3.upload_file(filename, bucket_name, "aerolineas/" + filename)
+    s3.upload_file(filename, bucket_name, "vuelos/" + filename)
     logger.info("Uploaded %s to S3 bucket %s", filename, bucket_name)
 
 def create_glue_catalog():
     logger.info("Creating Glue catalog")
-    s3_path = f"s3://{S3_BUCKET_NAME}/aerolineas"
+    s3_path = f"s3://{S3_BUCKET_NAME}/vuelos"
 
     columns = infer_column_types(NOMBRE_TABLA + ".csv")
 
